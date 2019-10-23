@@ -2,20 +2,23 @@ package ac.za.cput.domain.employee;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
-@MappedSuperclass
+@Entity
 public class Employee {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "emp_id", nullable = false, columnDefinition = "VARCHAR(10)")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GenericGenerator(name = "uuid", strategy = "uuid")
     private String empId;
+    @Column
     private String firstName;
+    @Column
     private String lastName;
+    @Column
     private String idNum;
+    @Column
     private String jobTitle;
 
     public Employee() {
@@ -69,7 +72,7 @@ public class Employee {
         this.jobTitle = jobTitle;
     }
 
-    public static abstract class Builder{
+    public static class Builder{
         private String empId;
         private String firstName;
         private String lastName;
@@ -97,7 +100,9 @@ public class Employee {
             this.jobTitle = jobTitle;
             return this;
         }
-        public abstract Employee build();
+        public Employee build(){
+            return new Employee(this);
+        }
 
         @Override
         public String toString() {

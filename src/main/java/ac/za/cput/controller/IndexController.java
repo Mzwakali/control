@@ -17,7 +17,7 @@ public class IndexController {
 
     }
 
-    @GetMapping("/admin")
+    /*@GetMapping("/admin")
     public String admin(){
         return ("<h1> Welcome Animal Control Admin<h1>");
     }
@@ -25,5 +25,5 @@ public class IndexController {
     @GetMapping("/user")
     public String user(){
         return ("<h1> Welcome Guest<h1>");
-    }
+    }*/
 }
