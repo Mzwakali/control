@@ -5,36 +5,66 @@ import ac.za.cput.domain.employee.Employee;
 import ac.za.cput.domain.request.NewEmployee;
 import ac.za.cput.factory.ResponseObjectFactory;
 import ac.za.cput.factory.employee.EmployeeFactory;
+import ac.za.cput.repository.employee.EmployeeRepository;
+import ac.za.cput.service.employee.EmployeeService;
 import ac.za.cput.service.employee.impl.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/control/employee")
 public class EmployeeController {
 
     @Autowired
-    EmployeeServiceImpl employeeService;
+    private EmployeeRepository employeeRepository;
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public ResponseEntity createEmpl(@RequestBody NewEmployee newEmployee){
-        System.out.println(newEmployee);
-        ResponseObject responseObject = ResponseObjectFactory.buildResponseObject(HttpStatus.OK.toString(),"Employee Created.");
-        if (newEmployee.getFirstName() == null || newEmployee.getLastName() == null){
-            responseObject.setResponse(HttpStatus.PRECONDITION_FAILED.toString());
-            responseObject.setResponseDesc("Please enter name and/or last namem:");
-        }
-        /*else{
-            Employee id =
-        }*/
+    @GetMapping("/all")
+    public List<Employee> getAllEmployees(){
+        return employeeRepository.findAll();
+    }
 
-        return ResponseEntity.ok(responseObject);
+    @DeleteMapping("/delete/{id}")
+    public void deleteEmployee(@PathVariable String id){
+        employeeRepository.deleteById(id);
     }
-    private Employee saveEmployee(NewEmployee newEmployee){
-        return employeeService.create(EmployeeFactory.createEmp(newEmployee.getFirstName(), newEmployee.getLastName(), newEmployee.getIdNum(), newEmployee.getJobTitle()));
+
+    @PostMapping("/create")
+    void addEmployee(@RequestBody Employee employee){
+        employeeRepository.save(employee);
     }
+
+ //   @RequestMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+ //   public List<Employee> persist(@RequestBody final Employee employee){
+ //       employeeRepository.save(employee);
+ //       return employeeRepository.findAll();
+ //   }
+    /*public ResponseEntity<Object> createEmployee(@RequestBody Employee employee){
+        Employee newEmp = employeeRepository.save(employee);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(newEmp.getEmpId()).toUri();
+        return ResponseEntity.created(location).build();
+    }*/
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<Object> updateEmployee(@RequestBody Employee employee, @PathVariable String id){
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
+        if (!optionalEmployee.isPresent())
+            return ResponseEntity.notFound().build();
+        employee.setEmpId(id);
+        employeeRepository.save(employee);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

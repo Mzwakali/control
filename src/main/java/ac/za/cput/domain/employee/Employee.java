@@ -5,20 +5,22 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "employee")
 public class Employee {
 
-    @Id
-    @Column(name = "emp_id", nullable = false, columnDefinition = "VARCHAR(10)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    //@GenericGenerator(name = "uuid", strategy = "uuid")
+   // @Id
+     //@GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(generator = "uuid")
+   // @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "emp_id", nullable = false, columnDefinition = "VARCHAR(20)")
     private String empId;
-    @Column
+    @Column(name = "firstName", nullable = false)
     private String firstName;
-    @Column
+    @Column(name = "lastName", nullable = false)
     private String lastName;
-    @Column
+    @Column(name = "id_Num", nullable = false)
     private String idNum;
-    @Column
+    @Column(name = "job_Title", nullable = false)
     private String jobTitle;
 
     public Employee() {
@@ -32,6 +34,10 @@ public class Employee {
         this.jobTitle = builder.jobTitle;
     }
 
+    @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
     public String getEmpId() {
         return empId;
     }

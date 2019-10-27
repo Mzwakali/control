@@ -34,12 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/control/**/create").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.GET, "/control/**/update").hasRole(ADMIN_ROLE)
-                .antMatchers("/control/**delete").hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.GET, "/control/**/getall").hasAnyRole(ADMIN_ROLE, USER_ROLE)
+                .antMatchers(HttpMethod.PUT, "/control/**/update").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, "/control/**delete").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.GET, "/control/**/all").hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .antMatchers(HttpMethod.GET, "/control/**/read").hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .antMatchers("/").permitAll()
                 .and()
+                .csrf().disable()
                 .formLogin();
     }
 
