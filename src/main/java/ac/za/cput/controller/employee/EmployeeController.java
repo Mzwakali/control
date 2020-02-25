@@ -55,7 +55,7 @@ public class EmployeeController {
         return ResponseEntity.created(location).build();
     }*/
 
-    @PutMapping("update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateEmployee(@RequestBody Employee employee, @PathVariable String id){
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
